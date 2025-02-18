@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <form action="/questions" method="post">
+        <p><input type="radio" value="go" name="lang" checked id="go"> <label for="go">go</label></p>
+        <p><input type="radio" value="python" name="lang" id="python"> <label for="python">python</label></p>
+        <p><input type="radio" value="cpp" name="lang" id="cpp"> <label for="cpp">c++</label></p>
+        <p><input type="radio" value="rust" name="lang" id="rust"> <label for="rust">rust</label></p>
+
+        <hr>
+        difficulity
+        <p><input type="radio" value="senior" name="difficulity" checked id="senior"><label for="senior">senior</label></p>
+        <p><input type="radio" value="middle" name="difficulity" id="middle"><label for="middle">middle</label></p>
+        <p><input type="radio" value="junior" name="difficulity" id="junior"><label for="junior">junior</label></p>
+        <p><input type="radio" value="intern" name="difficulity" id="intern"><label for="intern">intern</label></p>
+
+        <input type="text" placeholder="count of questions" name="count" required>
+
+        <button type="submit">отправить</button>
+    </form>
+</body>
+</html>

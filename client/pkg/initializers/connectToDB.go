@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/DevAthhh/trainer-ai/server/pkg/models"
+	"github.com/DevAthhh/trainer-ai/client/pkg/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

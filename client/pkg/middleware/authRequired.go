@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/DevAthhh/trainer-ai/server/pkg/initializers"
-	"github.com/DevAthhh/trainer-ai/server/pkg/models"
+	"github.com/DevAthhh/trainer-ai/client/pkg/initializers"
+	"github.com/DevAthhh/trainer-ai/client/pkg/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -16,7 +16,7 @@ func RequireAuth(c *gin.Context) {
 	tokenString, err := c.Cookie("Authorization")
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Unauthorizated",
 		})
 	}
@@ -38,7 +38,7 @@ func RequireAuth(c *gin.Context) {
 		var user models.UserTrainers
 		initializers.DB.First(&user, claims["sub"])
 		if user.ID == 0 {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Unauthorizated",
 			})
 		}
@@ -48,7 +48,7 @@ func RequireAuth(c *gin.Context) {
 		c.Next()
 
 	} else {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Unauthorizated",
 		})
 	}

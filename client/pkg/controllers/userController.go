@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/DevAthhh/trainer-ai/server/pkg/initializers"
-	"github.com/DevAthhh/trainer-ai/server/pkg/models"
+	"github.com/DevAthhh/trainer-ai/client/pkg/initializers"
+	"github.com/DevAthhh/trainer-ai/client/pkg/models"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -14,23 +14,16 @@ import (
 
 func Logout(c *gin.Context) {
 	c.SetCookie("Authorization", "", -1, "/", "", false, true)
-	c.JSON(http.StatusOK, gin.H{
-		"status": "you have logged out of your account",
-	})
+	c.Redirect(http.StatusFound, "/")
 }
 
-func Login(c *gin.Context) {
+func LoginPost(c *gin.Context) {
 	var data struct {
 		Email    string `json:"email"`
-		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	if c.Bind(&data) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body!",
-		})
-		return
-	}
+	data.Email = c.PostForm("email")
+	data.Password = c.PostForm("password")
 
 	var user models.UserTrainers
 	initializers.DB.First(&user, "email = ?", data.Email)
@@ -61,23 +54,19 @@ func Login(c *gin.Context) {
 
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", tokenString, 3600*24*30, "", "", false, true)
-	c.JSON(http.StatusOK, gin.H{
-		"status": "you are logged in",
-	})
+	c.Set("user", user.Username)
+	c.Redirect(http.StatusFound, "/")
 }
 
-func Register(c *gin.Context) {
+func RegisterPost(c *gin.Context) {
 	var data struct {
 		Email    string `json:"email"`
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	if c.Bind(&data) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "failed to read body!",
-		})
-		return
-	}
+	data.Email = c.PostForm("email")
+	data.Password = c.PostForm("password")
+	data.Username = c.PostForm("username")
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(data.Password), 10)
 	if err != nil {
@@ -98,7 +87,13 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status": "User created",
-	})
+	c.Redirect(http.StatusFound, "/login")
+}
+
+func Register(c *gin.Context) {
+	c.HTML(http.StatusOK, "register.html", nil)
+}
+
+func Login(c *gin.Context) {
+	c.HTML(http.StatusOK, "login.html", nil)
 }
